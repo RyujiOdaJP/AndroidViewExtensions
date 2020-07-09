@@ -1,7 +1,5 @@
 package jp.co.arsaga.extensions.view
 
-import jp.mjc.kurasel.presentation.view.common.R
-
 enum class NavigateAnimationType(
     val enterAnimationId: Int = -1,
     val exitAnimationId: Int = -1,

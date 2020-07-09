@@ -17,7 +17,6 @@ import androidx.databinding.BindingAdapter
 import androidx.navigation.*
 import androidx.navigation.fragment.FragmentNavigator
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import jp.mjc.kurasel.presentation.view.common.R
 import java.util.concurrent.atomic.AtomicBoolean
 
 @BindingAdapter("binding_onOnceClick", "binding_clickIntervalMs", requireAll = false)
