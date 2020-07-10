@@ -15,13 +15,7 @@ git submodule update
 
 ライブラリに変更があった場合は
 
-```
-git submodule update
-```
-
-をする。
-できなかった場合は
 
 ```
-git submodule foreach git pull origin master
+git submodule foreach 'git pull origin master' && git submodule update
 ```
