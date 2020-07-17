@@ -1,6 +1,7 @@
 package jp.co.arsaga.extensions.view
 
 import android.animation.Animator
+import android.animation.ValueAnimator
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
@@ -32,4 +33,20 @@ fun View.hide(isVisible: Boolean) {
     } else {
         View.INVISIBLE
     }
+}
+
+@BindingAdapter("binding_visibility", "binding_height")
+fun View.slideAnimation(visibility: Boolean, height: Float) {
+    val slideAnimator = if(visibility) {
+        ValueAnimator.ofInt(0, height.toInt()).setDuration(300)
+    } else {
+        ValueAnimator.ofInt(height.toInt(), 0).setDuration(300)
+    }
+
+    slideAnimator.addUpdateListener {
+        layoutParams.height = it.animatedValue as Int
+        requestLayout()
+    }
+
+    slideAnimator.start()
 }
