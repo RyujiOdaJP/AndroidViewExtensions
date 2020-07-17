@@ -31,9 +31,9 @@ fun EditText.addComma(): String = text.toString()
     ?.let { String.format("%,d", it.toInt()) }
     ?: "0"
 
-@BindingAdapter("binding_alreadyFocused")
-fun EditText.alreadyFocused(focusedViewIdSet: MutableSet<Int>?) {
+@BindingAdapter("binding_alreadyFocused", "binding_focusedId", requireAll = false)
+fun EditText.alreadyFocused(focusedViewIdSet: MutableSet<Int>?, focusedId: Int?) {
     setOnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus) focusedViewIdSet?.add(id)
+        if (!hasFocus) focusedViewIdSet?.add(focusedId ?: id)
     }
 }
