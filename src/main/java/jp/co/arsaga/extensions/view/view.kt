@@ -36,17 +36,17 @@ fun View.hide(isVisible: Boolean) {
 }
 
 @BindingAdapter("binding_visibility", "binding_height")
-fun View.slideAnimation(visibility: Boolean, height: Float) {
-    val slideAnimator = if(visibility) {
+fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
+    val expandAnimator = if(visibility) {
         ValueAnimator.ofInt(0, height.toInt()).setDuration(300)
     } else {
         ValueAnimator.ofInt(height.toInt(), 0).setDuration(300)
     }
 
-    slideAnimator.addUpdateListener {
+    expandAnimator.addUpdateListener {
         layoutParams.height = it.animatedValue as Int
         requestLayout()
     }
 
-    slideAnimator.start()
+    expandAnimator.start()
 }
