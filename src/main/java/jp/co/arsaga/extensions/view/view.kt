@@ -6,6 +6,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.databinding.BindingAdapter
 import kotlin.math.hypot
 
@@ -37,16 +39,27 @@ fun View.hide(isVisible: Boolean) {
 
 @BindingAdapter("binding_visibility", "binding_height")
 fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
-    val expandAnimator = if(visibility) {
-        ValueAnimator.ofInt(0, height.toInt()).setDuration(300)
+    if(visibility) {
+        ValueAnimator.ofInt(0, height.toInt()).setDuration(300).let { animator ->
+            animator.addUpdateListener {
+                layoutParams.height = it.animatedValue as Int
+                requestLayout()
+            }
+            animator.doOnStart {
+                this.visibility = View.VISIBLE
+            }
+            animator.start()
+        }
     } else {
-        ValueAnimator.ofInt(height.toInt(), 0).setDuration(300)
+        ValueAnimator.ofInt(height.toInt(), 0).setDuration(300).let { animator ->
+            animator.addUpdateListener {
+                layoutParams.height = it.animatedValue as Int
+                requestLayout()
+            }
+            animator.doOnEnd {
+                this.visibility = View.GONE
+            }
+            animator.start()
+        }
     }
-
-    expandAnimator.addUpdateListener {
-        layoutParams.height = it.animatedValue as Int
-        requestLayout()
-    }
-
-    expandAnimator.start()
 }
