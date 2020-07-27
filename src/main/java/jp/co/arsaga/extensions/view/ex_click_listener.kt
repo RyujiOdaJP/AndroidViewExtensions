@@ -63,7 +63,7 @@ fun onTransitionBack(view: View, popUpTo: NavDirections?, navigateBackSideEffect
     requireAll = false)
 fun onTransitionClick(
     view: View,
-    navigateArgsAction: NavDirections? = null,
+    navigateArgsAction: (() -> NavDirections?)? = null,
     navigateSideEffect: View.OnClickListener? = null,
     navigateAnimation: NavigateAnimationType? = null,
     navigatorExtrasSeed: Map<String, View>? = null,
@@ -73,18 +73,19 @@ fun onTransitionClick(
     navigateArgsAction ?: return
     setTapReaction(view)
     onOnceClick(view, View.OnClickListener {
+        val navDirections = navigateArgsAction() ?: return@OnClickListener
         navigateSideEffect?.onClick(it)
         (navController ?: it.findNavController()).run {
             navigatorExtrasSeed?.let {
                 FragmentNavigator.Extras.Builder().apply {
                     it.forEach { sharedView -> addSharedElement(sharedView.value, sharedView.key) }
                 }.build().let { sharedExtras ->
-                    navigate(navigateArgsAction, sharedExtras)
+                    navigate(navDirections, sharedExtras)
                 }
             } ?: navigatorExtrasActivity?.let {
-                navigate(navigateArgsAction, ActivityNavigatorExtras(it))
+                navigate(navDirections, ActivityNavigatorExtras(it))
             } ?: navigate(
-                navigateArgsAction,
+                navDirections,
                 animateNavOptionsFactory(
                     navigateAnimation
                 )
