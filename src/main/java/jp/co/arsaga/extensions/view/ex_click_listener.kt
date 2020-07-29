@@ -140,6 +140,7 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
             when (state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> state = BottomSheetBehavior.STATE_EXPANDED
                 BottomSheetBehavior.STATE_EXPANDED -> state = BottomSheetBehavior.STATE_COLLAPSED
+                else -> {}
             }
         }
     }

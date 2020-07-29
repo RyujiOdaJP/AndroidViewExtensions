@@ -11,7 +11,7 @@ fun EditText.addYen(input: String) {
     if(text.toString().replace("¥","") != input || text.first() != '¥') {
         val cursorPosition = selectionStart
         val commaCount = text.count { it ==',' }
-        setText("¥$input")
+        ("¥$input").apply { setText(this) }
         filters
             .run { find { it is InputFilter.LengthFilter } as? InputFilter.LengthFilter }
             ?.takeIf { cursorPosition < it.max }
