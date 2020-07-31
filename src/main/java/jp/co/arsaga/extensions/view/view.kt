@@ -2,6 +2,7 @@ package jp.co.arsaga.extensions.view
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
@@ -40,7 +41,7 @@ fun View.hide(isVisible: Boolean) {
 @BindingAdapter("binding_visibility", "binding_height")
 fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
     if(visibility) {
-        ValueAnimator.ofInt(0, height.toInt()).setDuration(300).let { animator ->
+        ValueAnimator.ofInt(0, convertDpToPx(context, height)).setDuration(300).let { animator ->
             animator.addUpdateListener {
                 layoutParams.height = it.animatedValue as Int
                 requestLayout()
@@ -51,7 +52,7 @@ fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
             animator.start()
         }
     } else {
-        ValueAnimator.ofInt(height.toInt(), 0).setDuration(300).let { animator ->
+        ValueAnimator.ofInt(convertDpToPx(context, height), 0).setDuration(300).let { animator ->
             animator.addUpdateListener {
                 layoutParams.height = it.animatedValue as Int
                 requestLayout()
@@ -62,4 +63,9 @@ fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
             animator.start()
         }
     }
+}
+
+private fun convertDpToPx(context: Context, dp: Float): Int {
+    val d = context.resources.displayMetrics.density
+    return ((dp * d) + 0.5).toInt()
 }
