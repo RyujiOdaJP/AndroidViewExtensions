@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.databinding.BindingAdapter
+import kotlin.math.floor
 import kotlin.math.hypot
+import kotlin.math.round
 
 
 val viewSizeMaximizeParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -67,5 +69,5 @@ fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
 
 private fun convertDpToPx(context: Context, dp: Float): Int {
     val d = context.resources.displayMetrics.density
-    return ((dp * d) + 0.5).toInt()
+    return round(dp * d).toInt()
 }
