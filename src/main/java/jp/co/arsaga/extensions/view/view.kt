@@ -43,7 +43,7 @@ fun View.hide(isVisible: Boolean) {
 @BindingAdapter("binding_visibility", "binding_height")
 fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
     if(visibility) {
-        ValueAnimator.ofInt(0, convertDpToPx(context, height)).setDuration(300).let { animator ->
+        ValueAnimator.ofInt(0, convertDpToPx(context, height)).setDuration(resources.getInteger(R.integer.animate_duration).toLong()).let { animator ->
             animator.addUpdateListener {
                 layoutParams.height = it.animatedValue as Int
                 requestLayout()
@@ -54,7 +54,7 @@ fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
             animator.start()
         }
     } else {
-        ValueAnimator.ofInt(convertDpToPx(context, height), 0).setDuration(300).let { animator ->
+        ValueAnimator.ofInt(convertDpToPx(context, height), 0).setDuration(resources.getInteger(R.integer.animate_duration).toLong()).let { animator ->
             animator.addUpdateListener {
                 layoutParams.height = it.animatedValue as Int
                 requestLayout()
