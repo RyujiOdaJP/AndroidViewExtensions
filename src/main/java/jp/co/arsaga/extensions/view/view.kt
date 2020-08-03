@@ -40,21 +40,23 @@ fun View.hide(isVisible: Boolean) {
     }
 }
 
-@BindingAdapter("binding_visibility", "binding_height")
-fun View.expandVerticallyAnimation(visibility: Boolean, height: Float) {
+@BindingAdapter("binding_visibility")
+fun View.expandVerticallyAnimation(visibility: Boolean) {
     if (visibility) {
-        ValueAnimator.ofInt(0, convertDpToPx(context, height)).also {
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED).let { measure(it, it) }
+        ValueAnimator.ofInt(0, measuredHeight).also {
             it.doOnStart { this.visibility = View.VISIBLE }
         }
     } else {
-        ValueAnimator.ofInt(convertDpToPx(context, height), 0).also {
+        ValueAnimator.ofInt(height, 0).also {
             it.doOnEnd { this.visibility = View.GONE }
         }
     }.let { animator ->
         animator.duration = resources.getInteger(R.integer.animate_duration).toLong()
         animator.addUpdateListener {
-            layoutParams.height = it.animatedValue as Int
-            requestLayout()
+            layoutParams = layoutParams.also { params ->
+                params.height = it.animatedValue as Int
+            }
         }
         animator.start()
     }
