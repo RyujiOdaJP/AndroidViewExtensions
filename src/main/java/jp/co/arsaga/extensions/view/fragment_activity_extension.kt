@@ -11,8 +11,17 @@ import androidx.navigation.ui.setupWithNavController
 
 
 fun FragmentActivity.setTitleNavHostFragment(navHostFragmentId: Int, toolbar: Toolbar) {
-    findNavControllerByNavHostFragmentId(supportFragmentManager, navHostFragmentId).let {
-        toolbar.setupWithNavController(it) }
+    findNavControllerByNavHostFragmentId(supportFragmentManager, navHostFragmentId).let { navController ->
+        toolbar.apply {
+            setupWithNavController(navController)
+            setNavigationOnClickListener {
+                HasReturnInitiativeFragment
+                    .returnHandling(getCurrentDisplayFragment(navHostFragmentId)) {
+                        navController.navigateUp()
+                    }
+            }
+        }
+    }
 }
 
 fun FragmentActivity.safeShowDialogFragment(dialogFragment: DialogFragment) {
