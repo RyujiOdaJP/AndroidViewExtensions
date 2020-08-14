@@ -10,7 +10,7 @@ interface HasReturnInitiativeFragment {
         fun returnHandling(
             currentFragment: Fragment?,
             returnAction: () -> Unit
-        ) = currentFragment
+        ): Unit? = currentFragment
             .takeIf { it !is HasReturnInitiativeFragment || it.isReturnable() }
             ?.run { returnAction() }
     }
