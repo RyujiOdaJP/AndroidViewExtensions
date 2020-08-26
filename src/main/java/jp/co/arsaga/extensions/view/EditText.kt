@@ -1,6 +1,10 @@
 package jp.co.arsaga.extensions.view
 
+import android.content.Context
 import android.text.InputFilter
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
@@ -35,5 +39,17 @@ fun EditText.addComma(): String = text.toString()
 fun EditText.alreadyFocused(focusedViewIdSet: MutableSet<Int>?, focusedId: Int?) {
     setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) focusedViewIdSet?.add(focusedId ?: id)
+    }
+}
+
+@BindingAdapter("binding_onEnterKey")
+fun EditText.onEnterKey(onEnterKey: View.OnClickListener?) {
+    setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(windowToken, 0)
+            onEnterKey?.onClick(this)
+        }
+        false
     }
 }
