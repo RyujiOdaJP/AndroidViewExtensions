@@ -53,6 +53,8 @@ fun onTransitionBack(view: View, popUpTo: NavDirections?, navigateBackSideEffect
     })
 }
 
+fun findNavController(view: View) = view.findNavController()
+
 @BindingAdapter(
     "binding_navigateArgsAction",
     "binding_navigateSideEffect",
