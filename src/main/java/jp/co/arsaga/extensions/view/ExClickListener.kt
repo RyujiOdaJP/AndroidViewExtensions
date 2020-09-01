@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @BindingAdapter("binding_onOnceClick", "binding_clickIntervalMs", requireAll = false)
 fun onOnceClick(view: View, onOnceClick: View.OnClickListener, clickIntervalMs: Long = 1000L) {
+    view.requestFocus()
     view.setOnClickListener(
         OnOnceClickListener(
             onOnceClick,
