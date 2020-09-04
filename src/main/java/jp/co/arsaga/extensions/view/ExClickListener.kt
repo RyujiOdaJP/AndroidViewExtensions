@@ -125,6 +125,7 @@ private fun setTapReaction(view: View) {
     }
 }
 
+fun animateNavOptionsFactory() = animateNavOptionsFactory(null)
 fun animateNavOptionsFactory(navigateAnimation: NavigateAnimationType?): NavOptions = navOptions {
     anim {
         (navigateAnimation ?: NavigateAnimationType.SLIDE).let {
