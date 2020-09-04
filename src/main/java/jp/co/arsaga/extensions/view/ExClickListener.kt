@@ -33,7 +33,7 @@ fun onOnceClick(view: View, onOnceClick: View.OnClickListener, clickIntervalMs: 
 @BindingAdapter("binding_developLink")
 fun developLink(view: View, developText: String?) {
     val alertMessage = (developText ?: "この機能は現在開発中です。\n 公開まで少々お待ちください。")
-    onOnceClick(view, View.OnClickListener {
+    onOnceClick(view, {
         AlertDialog.Builder(view.context)
             .setMessage(alertMessage)
             .setPositiveButton("OK") { dialog, _ ->
@@ -44,7 +44,7 @@ fun developLink(view: View, developText: String?) {
 
 @BindingAdapter("binding_popUpTo", "binding_navigateBackSideEffect", requireAll = false)
 fun onTransitionBack(view: View, popUpTo: NavDirections?, navigateBackSideEffect: (() -> Unit)?) {
-    onOnceClick(view, View.OnClickListener {
+    onOnceClick(view, {
         navigateBackSideEffect?.let { it() }
         it.findNavController().run {
             popUpTo?.run {
@@ -75,7 +75,7 @@ fun onTransitionClick(
 ) {
     navigateArgsAction ?: return
     setTapReaction(view)
-    onOnceClick(view, View.OnClickListener {
+    onOnceClick(view, {
         navigateSideEffect?.onClick(it)
         (navController ?: it.findNavController()).run {
             navigatorExtrasSeed?.let {
