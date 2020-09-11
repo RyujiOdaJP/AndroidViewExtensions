@@ -1,11 +1,14 @@
 package jp.co.arsaga.extensions.view
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import jp.co.arsaga.extensions.viewModel.DiffRefreshEvent
 
 @Suppress("UNUSED_PARAMETER")
 @BindingAdapter("binding_listObserve")
@@ -15,9 +18,28 @@ fun RecyclerView.listObserve(collection: Collection<Any>?) {
     if (currentViewHolderSize == 0) scheduleLayoutAnimation()
 }
 
-@BindingAdapter("binding_listDiff")
-fun RecyclerView.listDiff(diffResult: DiffUtil.DiffResult) {
-    adapter?.run { diffResult.dispatchUpdatesTo(this) }
+@BindingAdapter("binding_diffObserve")
+fun RecyclerView.diffObserve(diffResult: DiffUtil.DiffResult?) {
+    val currentViewHolderSize = layoutManager?.childCount
+    adapter?.run { diffResult?.dispatchUpdatesTo(this) }
+    if (currentViewHolderSize == 0) scheduleLayoutAnimation()
+}
+@BindingAdapter("binding_diffScrollObserve")
+fun RecyclerView.diffScrollObserve(diffRefreshEvent: DiffRefreshEvent?) {
+    val currentViewHolderSize = layoutManager?.childCount
+    diffRefreshEvent?.also {
+        adapter?.run { it.diffResult.dispatchUpdatesTo(this) }
+        if (it.scrollPosition >= 0) observeAnimationFinish(this, Handler(Looper.getMainLooper())) {
+            scrollToPosition(it.scrollPosition)
+        }
+    }
+    if (currentViewHolderSize == 0) scheduleLayoutAnimation()
+}
+private fun observeAnimationFinish(recyclerView: RecyclerView, handler: Handler, callback: () -> Unit) {
+    if (!recyclerView.isAnimating) callback()
+    else handler.postDelayed({
+        observeAnimationFinish(recyclerView, handler, callback)
+    }, 100L)
 }
 
 class BindingViewHolder<T : ViewDataBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
