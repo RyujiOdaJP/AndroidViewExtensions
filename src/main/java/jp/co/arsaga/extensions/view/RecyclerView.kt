@@ -5,6 +5,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +44,14 @@ private fun observeAnimationFinish(recyclerView: RecyclerView, handler: Handler,
 }
 
 class BindingViewHolder<T : ViewDataBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
+
+abstract class MergeDataBindingAdapter : DataBindingAdapter<ViewDataBinding>() {
+    override fun onCreateViewDataBinding(
+        layoutInflater: LayoutInflater,
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
+}
 
 abstract class DataBindingAdapter<T : ViewDataBinding> : RecyclerView.Adapter<BindingViewHolder<T>>() {
     abstract fun onCreateViewDataBinding(layoutInflater: LayoutInflater, parent: ViewGroup, viewType: Int): T
