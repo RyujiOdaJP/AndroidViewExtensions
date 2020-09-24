@@ -69,3 +69,5 @@ abstract class DataBindingAdapter<T : ViewDataBinding> : RecyclerView.Adapter<Bi
         onBindViewDataBinding(holder.binding, position)
     }
 }
+
+fun RecyclerView.Adapter<out RecyclerView.ViewHolder>.isLastItem(position: Int): Boolean = itemCount -1 == position
