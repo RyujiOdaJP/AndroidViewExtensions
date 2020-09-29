@@ -1,5 +1,6 @@
 package jp.co.arsaga.extensions.view
 
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import jp.co.arsaga.extensions.viewModel.DiffRefreshEvent
 
@@ -41,6 +44,19 @@ private fun observeAnimationFinish(recyclerView: RecyclerView, handler: Handler,
     else handler.postDelayed({
         observeAnimationFinish(recyclerView, handler, callback)
     }, 100L)
+}
+
+@BindingAdapter("binding_divider")
+fun RecyclerView.divider(drawable: Drawable?) {
+    drawable ?: return
+    layoutManager?.also {
+        if (it is LinearLayoutManager) {
+            DividerItemDecoration(context, it.orientation).apply {
+                setDrawable(drawable)
+                addItemDecoration(this)
+            }
+        }
+    }
 }
 
 class BindingViewHolder<T : ViewDataBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
