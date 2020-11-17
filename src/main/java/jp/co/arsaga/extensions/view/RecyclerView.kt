@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -60,6 +61,11 @@ fun RecyclerView.divider(drawable: Drawable?) {
 }
 
 class BindingViewHolder<T : ViewDataBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
+
+fun RecyclerView.sharedViewPool(recycledViewPool: RecyclerView.RecycledViewPool, @LayoutRes itemLayoutId: Int) {
+    recycledViewPool.setMaxRecycledViews(itemLayoutId, Int.MAX_VALUE)
+    setRecycledViewPool(recycledViewPool)
+}
 
 abstract class MergeDataBindingAdapter : DataBindingAdapter<ViewDataBinding>() {
     override fun onCreateViewDataBinding(
