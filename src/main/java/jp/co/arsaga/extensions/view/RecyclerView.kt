@@ -9,10 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import jp.co.arsaga.extensions.viewModel.DiffRefreshEvent
 
 @Suppress("UNUSED_PARAMETER")
@@ -20,6 +17,16 @@ import jp.co.arsaga.extensions.viewModel.DiffRefreshEvent
 fun RecyclerView.listObserve(collection: Collection<Any>?) {
     val currentViewHolderSize = layoutManager?.childCount
     adapter?.notifyDataSetChanged()
+    if (currentViewHolderSize == 0) scheduleLayoutAnimation()
+}
+
+@BindingAdapter("binding_listDiffObserve")
+fun <T> RecyclerView.listDiffObserve(collection: List<T>?) {
+    val currentViewHolderSize = layoutManager?.childCount
+    adapter?.let {
+        @Suppress("UNCHECKED_CAST")
+        (it as ListAdapter<T, *>).submitList(collection)
+    }
     if (currentViewHolderSize == 0) scheduleLayoutAnimation()
 }
 
@@ -73,6 +80,38 @@ abstract class MergeDataBindingAdapter : DataBindingAdapter<ViewDataBinding>() {
         parent: ViewGroup,
         viewType: Int
     ): ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
+}
+
+abstract class MergeListBindingAdapter<Item>(
+    callback: DiffUtil.ItemCallback<Item>
+) : ListBindingAdapter<ViewDataBinding, Item>(callback) {
+    override fun onCreateViewDataBinding(
+        layoutInflater: LayoutInflater,
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewDataBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
+}
+
+abstract class ListBindingAdapter<
+        Binding : ViewDataBinding,
+        Item
+        >(
+    callback: DiffUtil.ItemCallback<Item>
+) : ListAdapter<Item, BindingViewHolder<Binding>>(callback) {
+    abstract fun onCreateViewDataBinding(layoutInflater: LayoutInflater, parent: ViewGroup, viewType: Int): Binding
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BindingViewHolder<Binding> = LayoutInflater.from(parent.context)
+    .run { onCreateViewDataBinding(this, parent, viewType) }
+    .run { BindingViewHolder(this) }
+
+    abstract fun onBindViewDataBinding(binding: Binding, position: Int)
+
+    override fun onBindViewHolder(holder: BindingViewHolder<Binding>, position: Int) {
+        onBindViewDataBinding(holder.binding, position)
+    }
 }
 
 abstract class DataBindingAdapter<T : ViewDataBinding> : RecyclerView.Adapter<BindingViewHolder<T>>() {
