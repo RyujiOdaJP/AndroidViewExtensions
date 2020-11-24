@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.*
 import jp.co.arsaga.extensions.viewModel.DiffRefreshEvent
 
@@ -74,7 +75,7 @@ fun RecyclerView.sharedViewPool(recycledViewPool: RecyclerView.RecycledViewPool,
     setRecycledViewPool(recycledViewPool)
 }
 
-abstract class MergeDataBindingAdapter : DataBindingAdapter<ViewDataBinding>() {
+abstract class MergeDataBindingAdapter(lifecycleOwner: LifecycleOwner) : DataBindingAdapter<ViewDataBinding>(lifecycleOwner) {
     override fun onCreateViewDataBinding(
         layoutInflater: LayoutInflater,
         parent: ViewGroup,
@@ -83,8 +84,9 @@ abstract class MergeDataBindingAdapter : DataBindingAdapter<ViewDataBinding>() {
 }
 
 abstract class MergeListBindingAdapter<Item>(
+    lifecycleOwner: LifecycleOwner,
     callback: DiffUtil.ItemCallback<Item>
-) : ListBindingAdapter<ViewDataBinding, Item>(callback) {
+) : ListBindingAdapter<ViewDataBinding, Item>(lifecycleOwner, callback) {
     override fun onCreateViewDataBinding(
         layoutInflater: LayoutInflater,
         parent: ViewGroup,
@@ -96,6 +98,7 @@ abstract class ListBindingAdapter<
         Binding : ViewDataBinding,
         Item
         >(
+    val lifecycleOwner: LifecycleOwner,
     callback: DiffUtil.ItemCallback<Item>
 ) : ListAdapter<Item, BindingViewHolder<Binding>>(callback) {
     abstract fun onCreateViewDataBinding(layoutInflater: LayoutInflater, parent: ViewGroup, viewType: Int): Binding
@@ -110,11 +113,15 @@ abstract class ListBindingAdapter<
     abstract fun onBindViewDataBinding(binding: Binding, position: Int)
 
     override fun onBindViewHolder(holder: BindingViewHolder<Binding>, position: Int) {
-        onBindViewDataBinding(holder.binding, position)
+        holder.binding.also {
+            it.lifecycleOwner = lifecycleOwner
+            onBindViewDataBinding(it, position)
+            it.executePendingBindings()
+        }
     }
 }
 
-abstract class DataBindingAdapter<T : ViewDataBinding> : RecyclerView.Adapter<BindingViewHolder<T>>() {
+abstract class DataBindingAdapter<T : ViewDataBinding>(val lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<BindingViewHolder<T>>() {
     abstract fun onCreateViewDataBinding(layoutInflater: LayoutInflater, parent: ViewGroup, viewType: Int): T
 
     override fun onCreateViewHolder(
@@ -127,7 +134,11 @@ abstract class DataBindingAdapter<T : ViewDataBinding> : RecyclerView.Adapter<Bi
     abstract fun onBindViewDataBinding(binding: T, position: Int)
 
     override fun onBindViewHolder(holder: BindingViewHolder<T>, position: Int) {
-        onBindViewDataBinding(holder.binding, position)
+        holder.binding.also {
+            it.lifecycleOwner = lifecycleOwner
+            onBindViewDataBinding(it, position)
+            it.executePendingBindings()
+        }
     }
 }
 
