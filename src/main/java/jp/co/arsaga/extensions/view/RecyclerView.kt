@@ -154,8 +154,8 @@ abstract class DataBindingAdapter<T : ViewDataBinding>(val lifecycleOwner: Lifec
 
     override fun onBindViewHolder(holder: BindingViewHolder<T>, position: Int) {
         holder.binding.also {
-            it.lifecycleOwner = lifecycleOwner
             onBindViewDataBinding(it, position)
+            it.lifecycleOwner = lifecycleOwner
             it.executePendingBindings()
         }
     }
