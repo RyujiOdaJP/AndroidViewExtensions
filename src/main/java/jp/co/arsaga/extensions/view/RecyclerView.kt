@@ -37,6 +37,7 @@ fun RecyclerView.diffObserve(diffResult: DiffUtil.DiffResult?) {
     adapter?.run { diffResult?.dispatchUpdatesTo(this) }
     if (currentViewHolderSize == 0) scheduleLayoutAnimation()
 }
+
 @BindingAdapter("binding_diffScrollObserve")
 fun RecyclerView.diffScrollObserve(diffRefreshEvent: DiffRefreshEvent?) {
     val currentViewHolderSize = layoutManager?.childCount
@@ -48,7 +49,12 @@ fun RecyclerView.diffScrollObserve(diffRefreshEvent: DiffRefreshEvent?) {
     }
     if (currentViewHolderSize == 0) scheduleLayoutAnimation()
 }
-private fun observeAnimationFinish(recyclerView: RecyclerView, handler: Handler, callback: () -> Unit) {
+
+private fun observeAnimationFinish(
+    recyclerView: RecyclerView,
+    handler: Handler,
+    callback: () -> Unit
+) {
     if (!recyclerView.isAnimating) callback()
     else handler.postDelayed({
         observeAnimationFinish(recyclerView, handler, callback)
@@ -70,12 +76,16 @@ fun RecyclerView.divider(drawable: Drawable?) {
 
 class BindingViewHolder<T : ViewDataBinding>(val binding: T) : RecyclerView.ViewHolder(binding.root)
 
-fun RecyclerView.sharedViewPool(recycledViewPool: RecyclerView.RecycledViewPool, @LayoutRes itemLayoutId: Int) {
+fun RecyclerView.sharedViewPool(
+    recycledViewPool: RecyclerView.RecycledViewPool,
+    @LayoutRes itemLayoutId: Int
+) {
     recycledViewPool.setMaxRecycledViews(itemLayoutId, Int.MAX_VALUE)
     setRecycledViewPool(recycledViewPool)
 }
 
-abstract class MergeDataBindingAdapter(lifecycleOwner: LifecycleOwner) : DataBindingAdapter<ViewDataBinding>(lifecycleOwner) {
+abstract class MergeDataBindingAdapter(lifecycleOwner: LifecycleOwner) :
+    DataBindingAdapter<ViewDataBinding>(lifecycleOwner) {
     override fun onCreateViewDataBinding(
         layoutInflater: LayoutInflater,
         parent: ViewGroup,
@@ -101,14 +111,18 @@ abstract class ListBindingAdapter<
     val lifecycleOwner: LifecycleOwner,
     callback: DiffUtil.ItemCallback<Item>
 ) : ListAdapter<Item, BindingViewHolder<Binding>>(callback) {
-    abstract fun onCreateViewDataBinding(layoutInflater: LayoutInflater, parent: ViewGroup, viewType: Int): Binding
+    abstract fun onCreateViewDataBinding(
+        layoutInflater: LayoutInflater,
+        parent: ViewGroup,
+        viewType: Int
+    ): Binding
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): BindingViewHolder<Binding> = LayoutInflater.from(parent.context)
-    .run { onCreateViewDataBinding(this, parent, viewType) }
-    .run { BindingViewHolder(this) }
+        .run { onCreateViewDataBinding(this, parent, viewType) }
+        .run { BindingViewHolder(this) }
 
     abstract fun onBindViewDataBinding(binding: Binding, position: Int)
 
@@ -121,8 +135,13 @@ abstract class ListBindingAdapter<
     }
 }
 
-abstract class DataBindingAdapter<T : ViewDataBinding>(val lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<BindingViewHolder<T>>() {
-    abstract fun onCreateViewDataBinding(layoutInflater: LayoutInflater, parent: ViewGroup, viewType: Int): T
+abstract class DataBindingAdapter<T : ViewDataBinding>(val lifecycleOwner: LifecycleOwner?) :
+    RecyclerView.Adapter<BindingViewHolder<T>>() {
+    abstract fun onCreateViewDataBinding(
+        layoutInflater: LayoutInflater,
+        parent: ViewGroup,
+        viewType: Int
+    ): T
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -142,4 +161,5 @@ abstract class DataBindingAdapter<T : ViewDataBinding>(val lifecycleOwner: Lifec
     }
 }
 
-fun RecyclerView.Adapter<out RecyclerView.ViewHolder>.isLastItem(position: Int): Boolean = itemCount -1 == position
+fun RecyclerView.Adapter<out RecyclerView.ViewHolder>.isLastItem(position: Int): Boolean =
+    itemCount - 1 == position
