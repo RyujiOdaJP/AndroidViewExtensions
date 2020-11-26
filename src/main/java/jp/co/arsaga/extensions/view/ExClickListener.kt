@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @BindingAdapter("binding_onOnceClick", "binding_clickIntervalMs", requireAll = false)
 fun onOnceClick(view: View, onOnceClick: View.OnClickListener?, clickIntervalMs: Long = 1000L) {
+    onOnceClick ?: return
     view.requestFocus()
     view.setOnClickListener(
         OnOnceClickListener(
@@ -157,7 +158,7 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
 }
 
 private class OnOnceClickListener(
-    private val clickListener: View.OnClickListener?,
+    private val clickListener: View.OnClickListener,
     private val intervalMs: Long = 1000L
 ) : View.OnClickListener {
     private val canClick = AtomicBoolean(true)
@@ -166,7 +167,7 @@ private class OnOnceClickListener(
         if (canClick.getAndSet(false)) {
             view?.run {
                 postDelayed({ canClick.set(true) }, intervalMs)
-                clickListener?.onClick(view)
+                clickListener.onClick(view)
             }
         }
     }
