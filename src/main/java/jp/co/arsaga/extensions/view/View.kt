@@ -10,21 +10,26 @@ import android.view.ViewGroup
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.databinding.BindingAdapter
-import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.round
 
 
-val viewSizeMaximizeParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+val viewSizeMaximizeParams =
+    ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-fun View.getAppearanceAnimator(centerX: Int, centerY: Int): Animator = hypot(width / 2.toDouble(), height / 2.toDouble()).toFloat()
-    .let { ViewAnimationUtils.createCircularReveal(this, centerX, centerY, 0f, it).apply { duration = 500L } }
+fun View.getAppearanceAnimator(centerX: Int, centerY: Int): Animator =
+    hypot(width / 2.toDouble(), height / 2.toDouble()).toFloat()
+        .let {
+            ViewAnimationUtils.createCircularReveal(this, centerX, centerY, 0f, it)
+                .apply { duration = 500L }
+        }
 
-fun View.getAppearanceAnimator(motionEvent: MotionEvent): Animator = getAppearanceAnimator(motionEvent.x.toInt(), motionEvent.y.toInt())
+fun View.getAppearanceAnimator(motionEvent: MotionEvent): Animator =
+    getAppearanceAnimator(motionEvent.x.toInt(), motionEvent.y.toInt())
 
 @BindingAdapter("binding_toggle")
-fun View.toggle(isVisible: Boolean) {
-    visibility = if (isVisible) {
+fun View.toggle(isVisible: Boolean?) {
+    visibility = if (isVisible == true) {
         View.VISIBLE
     } else {
         View.GONE
@@ -32,8 +37,8 @@ fun View.toggle(isVisible: Boolean) {
 }
 
 @BindingAdapter("binding_hide")
-fun View.hide(isVisible: Boolean) {
-    visibility = if (isVisible) {
+fun View.hide(isVisible: Boolean?) {
+    visibility = if (isVisible == true) {
         View.VISIBLE
     } else {
         View.INVISIBLE
@@ -41,8 +46,8 @@ fun View.hide(isVisible: Boolean) {
 }
 
 @BindingAdapter("binding_visibility")
-fun View.expandVerticallyAnimation(visibility: Boolean) {
-    if (visibility) {
+fun View.expandVerticallyAnimation(visibility: Boolean?) {
+    if (visibility == true) {
         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED).let { measure(it, it) }
         ValueAnimator.ofInt(0, measuredHeight).also {
             it.doOnStart { this.visibility = View.VISIBLE }

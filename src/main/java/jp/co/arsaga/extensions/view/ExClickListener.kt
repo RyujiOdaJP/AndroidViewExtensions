@@ -20,7 +20,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.util.concurrent.atomic.AtomicBoolean
 
 @BindingAdapter("binding_onOnceClick", "binding_clickIntervalMs", requireAll = false)
-fun onOnceClick(view: View, onOnceClick: View.OnClickListener, clickIntervalMs: Long = 1000L) {
+fun onOnceClick(view: View, onOnceClick: View.OnClickListener?, clickIntervalMs: Long = 1000L) {
+    onOnceClick ?: return
     view.requestFocus()
     view.setOnClickListener(
         OnOnceClickListener(
@@ -63,7 +64,8 @@ fun findNavController(view: View) = view.findNavController()
     "binding_navigateExtrasSeed",
     "binding_navigateExtrasActivity",
     "binding_navController",
-    requireAll = false)
+    requireAll = false
+)
 fun onTransitionClick(
     view: View,
     navigateArgsAction: NavDirections? = null,
@@ -121,7 +123,11 @@ private fun setTapReaction(view: View) {
             }
         }, null, null)
     }.let {
-        view.foreground = RippleDrawable(view.context.getColorStateList(R.color.selector_button_push), null, ShapeDrawable(it))
+        view.foreground = RippleDrawable(
+            view.context.getColorStateList(R.color.selector_button_push),
+            null,
+            ShapeDrawable(it)
+        )
     }
 }
 
@@ -144,7 +150,8 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
             when (state) {
                 BottomSheetBehavior.STATE_COLLAPSED -> state = BottomSheetBehavior.STATE_EXPANDED
                 BottomSheetBehavior.STATE_EXPANDED -> state = BottomSheetBehavior.STATE_COLLAPSED
-                else -> {}
+                else -> {
+                }
             }
         }
     }
