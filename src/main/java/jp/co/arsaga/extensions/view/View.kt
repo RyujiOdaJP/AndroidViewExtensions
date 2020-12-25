@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.databinding.BindingAdapter
@@ -70,4 +71,28 @@ fun View.expandVerticallyAnimation(visibility: Boolean?) {
 private fun convertDpToPx(context: Context, dp: Float): Int {
     val d = context.resources.displayMetrics.density
     return round(dp * d).toInt()
+}
+
+fun displayKeyboard(view: View, isVisible: Boolean) {
+    (view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).run {
+        if (isVisible) {
+            toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        } else {
+            view.requestFocus()
+            hideSoftInputFromWindow(
+                view.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+    }
+}
+
+
+@BindingAdapter("binding_scrollReachedBottom")
+fun ViewGroup.scrollReachedBottom(onClickListener: View.OnClickListener) {
+    setOnScrollChangeListener { v, _, scrollY, _, _ ->
+        if ((v as ViewGroup).getChildAt(0).bottom <= (scrollY + v.height)) {
+            onClickListener.onClick(v)
+        }
+    }
 }
