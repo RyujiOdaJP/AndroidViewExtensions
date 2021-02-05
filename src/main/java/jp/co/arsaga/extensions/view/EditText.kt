@@ -43,6 +43,11 @@ fun EditText.alreadyFocused(focusedViewIdSet: MutableSet<Int>?, focusedId: Int?)
     }
 }
 
+@BindingAdapter("binding_focusChanged")
+fun EditText.focusChanged(focusChanged: View.OnFocusChangeListener?) {
+    onFocusChangeListener = focusChanged
+}
+
 @BindingAdapter("binding_editTextError", "binding_errorMessage", "binding_errorIcon", requireAll = false)
 fun EditText.errorMessage(isError: Boolean?,errorMessage: String?, errorIcon: Drawable?) {
     if (isError == true) setError(errorMessage, errorIcon)
@@ -52,7 +57,7 @@ fun EditText.errorMessage(isError: Boolean?,errorMessage: String?, errorIcon: Dr
 @BindingAdapter("binding_onEnterKey")
 fun EditText.onEnterKey(onEnterKey: View.OnClickListener?) {
     setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+        if (actionId in listOf(EditorInfo.IME_ACTION_NEXT, actionId == EditorInfo.IME_ACTION_DONE)) {
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .hideSoftInputFromWindow(windowToken, 0)
             onEnterKey?.onClick(this)
