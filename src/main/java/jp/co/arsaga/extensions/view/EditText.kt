@@ -43,6 +43,11 @@ fun EditText.alreadyFocused(focusedViewIdSet: MutableSet<Int>?, focusedId: Int?)
     }
 }
 
+@BindingAdapter("binding_focusChanged")
+fun EditText.focusChanged(focusChanged: View.OnFocusChangeListener?) {
+    onFocusChangeListener = focusChanged
+}
+
 @BindingAdapter("binding_editTextError", "binding_errorMessage", "binding_errorIcon", requireAll = false)
 fun EditText.errorMessage(isError: Boolean?,errorMessage: String?, errorIcon: Drawable?) {
     if (isError == true) setError(errorMessage, errorIcon)
