@@ -1,6 +1,7 @@
 package jp.co.arsaga.extensions.view
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.text.InputFilter
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -40,6 +41,12 @@ fun EditText.alreadyFocused(focusedViewIdSet: MutableSet<Int>?, focusedId: Int?)
     setOnFocusChangeListener { _, hasFocus ->
         if (!hasFocus) focusedViewIdSet?.add(focusedId ?: id)
     }
+}
+
+@BindingAdapter("binding_editTextError", "binding_errorMessage", "binding_errorIcon", requireAll = false)
+fun EditText.errorMessage(isError: Boolean?,errorMessage: String?, errorIcon: Drawable?) {
+    if (isError == true) setError(errorMessage, errorIcon)
+    else setError(null, null)
 }
 
 @BindingAdapter("binding_onEnterKey")
