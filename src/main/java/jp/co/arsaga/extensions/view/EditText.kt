@@ -52,7 +52,7 @@ fun EditText.errorMessage(isError: Boolean?,errorMessage: String?, errorIcon: Dr
 @BindingAdapter("binding_onEnterKey")
 fun EditText.onEnterKey(onEnterKey: View.OnClickListener?) {
     setOnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_NEXT) {
+        if (actionId in listOf(EditorInfo.IME_ACTION_NEXT, actionId == EditorInfo.IME_ACTION_DONE)) {
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .hideSoftInputFromWindow(windowToken, 0)
             onEnterKey?.onClick(this)
