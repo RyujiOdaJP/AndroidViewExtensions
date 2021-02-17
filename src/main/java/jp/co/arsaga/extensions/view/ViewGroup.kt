@@ -6,13 +6,16 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.BindingAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-@BindingAdapter("binding_BottomSheetPeekHeight")
-fun ViewGroup.bottomPeekHeight(px: Float) {
+@BindingAdapter("binding_BottomSheetPeekHeight", "binding_BottomSheetIsHideable", requireAll = false)
+fun ViewGroup.bottomPeekHeight(
+    px: Float,
+    BottomSheetIsHideable: Boolean? = null
+): BottomSheetBehavior<ViewGroup> = BottomSheetBehavior<ViewGroup>().apply {
+    peekHeight = px.toInt()
+    isHideable = BottomSheetIsHideable ?: false
+}.also {
     layoutParams = (layoutParams as CoordinatorLayout.LayoutParams).apply {
-        behavior = BottomSheetBehavior<ViewGroup>().apply {
-            peekHeight = px.toInt()
-            isHideable = false
-        }
+        behavior = it
     }
 }
 
