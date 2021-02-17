@@ -49,8 +49,7 @@ fun View.hide(isVisible: Boolean?) {
 @BindingAdapter("binding_visibility")
 fun View.expandVerticallyAnimation(visibility: Boolean?) {
     if (visibility == true) {
-        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED).let { measure(it, it) }
-        ValueAnimator.ofInt(0, measuredHeight).also {
+        ValueAnimator.ofInt(0, measuredSize().second).also {
             it.doOnStart { this.visibility = View.VISIBLE }
         }
     } else {
@@ -87,6 +86,10 @@ fun displayKeyboard(view: View, isVisible: Boolean) {
     }
 }
 
+fun View.measuredSize(): Pair<Int, Int> = View.MeasureSpec
+    .makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    .let { measure(it, it) }
+    .let { Pair(measuredWidth, measuredHeight) }
 
 @BindingAdapter("binding_scrollReachedBottom")
 fun ViewGroup.scrollReachedBottom(onClickListener: View.OnClickListener) {
