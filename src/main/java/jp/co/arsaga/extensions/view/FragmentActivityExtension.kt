@@ -47,7 +47,18 @@ fun FragmentActivity.setDestinationChangeListener(
     }
 }
 
-fun FragmentActivity.getCurrentDisplayFragment(navHostFragmentId: Int): Fragment? = supportFragmentManager
+fun FragmentActivity.getCurrentDisplayFragment(
+    navHostFragmentId: Int
+): Fragment? = getCurrentDisplayFragment(supportFragmentManager, navHostFragmentId)
+
+fun Fragment.getCurrentDisplayFragment(
+    navHostFragmentId: Int
+): Fragment? = getCurrentDisplayFragment(childFragmentManager, navHostFragmentId)
+
+private fun getCurrentDisplayFragment(
+    fragmentManager: FragmentManager,
+    navHostFragmentId: Int
+): Fragment? = fragmentManager
     .findFragmentById(navHostFragmentId)
     ?.childFragmentManager
     ?.fragments
