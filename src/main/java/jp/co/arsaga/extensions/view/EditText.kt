@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
+import timber.log.Timber
 import kotlin.math.min
 
 @BindingAdapter("binding_setText")
@@ -57,7 +58,7 @@ fun EditText.errorMessage(isError: Boolean?,errorMessage: String?, errorIcon: Dr
 @BindingAdapter("binding_onEnterKey")
 fun EditText.onEnterKey(onEnterKey: View.OnClickListener?) {
     setOnEditorActionListener { _, actionId, _ ->
-        if (actionId in listOf(EditorInfo.IME_ACTION_NEXT, actionId == EditorInfo.IME_ACTION_DONE)) {
+        if (actionId in listOf(EditorInfo.IME_ACTION_NEXT, EditorInfo.IME_ACTION_DONE)) {
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .hideSoftInputFromWindow(windowToken, 0)
             onEnterKey?.onClick(this)
