@@ -157,13 +157,21 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
     }
 }
 
-@BindingAdapter("binding_webTo")
-fun webTo(view: View, url: String) {
-    view.setOnClickListener {
+@BindingAdapter("binding_webTo", "headers", requireAll = false)
+fun webTo(view: View?, url: String?, headers: Map<String, Any>?) {
+    view?.setOnClickListener { it ->
         setTapReaction(it)
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        ContextCompat.startActivity(view.context, intent, null)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url ?: ""))
+        val bundle = Bundle().apply {
+            headers?.forEach {
+                this.putString(it.key, it.value.toString())
+            }
+        }
+        intent.putExtra(Browser.EXTRA_HEADERS, bundle)
+        ContextCompat.startActivity(view.context, intent, bundle)
     }
+}
+
 
 private class OnOnceClickListener(
     private val clickListener: View.OnClickListener,
