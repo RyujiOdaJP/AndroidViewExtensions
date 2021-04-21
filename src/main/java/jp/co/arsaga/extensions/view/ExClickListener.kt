@@ -157,6 +157,14 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
     }
 }
 
+@BindingAdapter("binding_webTo")
+fun webTo(view: View, url: String) {
+    view.setOnClickListener {
+        setTapReaction(it)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        ContextCompat.startActivity(view.context, intent, null)
+    }
+
 private class OnOnceClickListener(
     private val clickListener: View.OnClickListener,
     private val intervalMs: Long = 1000L
