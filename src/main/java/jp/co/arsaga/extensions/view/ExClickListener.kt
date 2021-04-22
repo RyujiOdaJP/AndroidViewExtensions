@@ -167,7 +167,7 @@ fun webTo(view: View?, url: String?, headers: Map<String, Any>?) {
             return@setOnClickListener
         }
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url ?: ""))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         val bundle = Bundle().apply {
             headers?.forEach {
                 this.putString(it.key, it.value.toString())
