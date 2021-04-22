@@ -161,6 +161,12 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
 fun webTo(view: View?, url: String?, headers: Map<String, Any>?) {
     view?.setOnClickListener { it ->
         setTapReaction(it)
+
+        if (url == null) {
+            Snackbar.make(view, "有効なURLが設定されていません。", Snackbar.LENGTH_SHORT).show()
+            return@setOnClickListener
+        }
+
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url ?: ""))
         val bundle = Bundle().apply {
             headers?.forEach {
