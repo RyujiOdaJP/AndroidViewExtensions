@@ -157,20 +157,23 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
     }
 }
 
-@BindingAdapter("binding_webTo", "headers", requireAll = false)
-fun webTo(view: View?, url: String?, headers: Map<String, Any>?) {
-    view?.setOnClickListener { it ->
+@BindingAdapter("binding_webTo", "binding_onUrlError", "binding_headers", requireAll = false)
+fun webTo(view: View?, url: String?, onUrlError: View.OnClickListener?, headers: Map<String, Any>?) {
+    view?.setOnClickListener {
         setTapReaction(it)
 
         if (url == null) {
-            Snackbar.make(view, "有効なURLが設定されていません。", Snackbar.LENGTH_SHORT).show()
+            onUrlError?.onClick(it)
             return@setOnClickListener
         }
 
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         val bundle = Bundle().apply {
-            headers?.forEach {
-                this.putString(it.key, it.value.toString())
+            headers?.forEach { header ->
+                when(val headerValue = header.value) {
+                    is Int -> this.putInt(header.key, headerValue)
+                    else -> this.putString(header.key, headerValue.toString())
+                }
             }
         }
         intent.putExtra(Browser.EXTRA_HEADERS, bundle)
