@@ -2,15 +2,20 @@ package jp.co.arsaga.extensions.view
 
 import android.animation.AnimatorInflater
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RoundRectShape
+import android.net.Uri
+import android.os.Bundle
+import android.provider.Browser
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.databinding.BindingAdapter
