@@ -10,14 +10,18 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 
-@BindingAdapter("binding_url", "binding_shapingType", "binding_shapingParam", "binding_urlWithHeaders", requireAll = false)
-fun ImageView.imageUrl(imageUrl: String?, shapingType: ShapingType?, shapingParam: Float?, urlWithHeaders: GlideUrl?) =
-    urlWithHeaders?.let { Glide.with(context).asBitmap()
-        .load( urlWithHeaders)
+@BindingAdapter("binding_url", "binding_shapingType", "binding_shapingParam", requireAll = false)
+fun ImageView.imageUrl(imageUrl: String?, shapingType: ShapingType?, shapingParam: Float?) =
+    imageUrl?.let { Glide.with(context).asBitmap()
+        .load(it)
         .attachImage(this, shapingType, shapingParam) }
-        ?: imageUrl?.let { Glide.with(context).asBitmap()
-            .load(it)
-            .attachImage(this, shapingType, shapingParam) }
+
+@BindingAdapter("binding_urlWithHeaders", "binding_shapingType", "binding_shapingParam", requireAll = false)
+fun ImageView.urlWithHeaders(urlWithHeaders: GlideUrl?, shapingType: ShapingType?, shapingParam: Float?) =
+    urlWithHeaders?.let { Glide.with(context).asBitmap()
+        .load(urlWithHeaders)
+        .attachImage(this, shapingType, shapingParam) }
+
 
 @BindingAdapter("binding_resource", "binding_shapingType", "binding_shapingParam", requireAll = false)
 fun ImageView.resourceId(resourceId: Int?, shapingType: ShapingType?, shapingParam: Float?) = resourceId?.let { Glide.with(context).asBitmap().load(it).attachImage(this, shapingType, shapingParam) }
