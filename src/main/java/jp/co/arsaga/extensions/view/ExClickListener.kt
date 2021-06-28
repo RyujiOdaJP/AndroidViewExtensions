@@ -103,7 +103,7 @@ fun onTransitionClick(
     })
 }
 
-private fun setTapReaction(view: View) {
+fun setTapReaction(view: View) {
     view.viewTreeObserver.addOnGlobalLayoutListener {
         if (view.rootView.width != view.run { width - marginStart - marginEnd }) {
             view.stateListAnimator = AnimatorInflater

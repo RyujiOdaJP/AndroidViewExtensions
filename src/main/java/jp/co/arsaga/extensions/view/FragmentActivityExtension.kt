@@ -1,5 +1,7 @@
 package jp.co.arsaga.extensions.view
 
+import android.app.Activity
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -11,7 +13,10 @@ import androidx.navigation.ui.setupWithNavController
 
 
 fun FragmentActivity.setTitleNavHostFragment(navHostFragmentId: Int, toolbar: Toolbar) {
-    findNavControllerByNavHostFragmentId(supportFragmentManager, navHostFragmentId).let { navController ->
+    findNavControllerByNavHostFragmentId(
+        supportFragmentManager,
+        navHostFragmentId
+    ).let { navController ->
         toolbar.apply {
             setupWithNavController(navController)
             setNavigationOnClickListener {
@@ -30,11 +35,12 @@ fun FragmentActivity.safeShowDialogFragment(dialogFragment: DialogFragment) {
 }
 
 fun FragmentActivity.dismissAllDialogFragment() {
-    supportFragmentManager
-        .fragments
-        .filterIsInstance<DialogFragment>()
-        .forEach { it.dismissAllowingStateLoss() }
+    getAllDialogFragment().forEach { it.dismissAllowingStateLoss() }
 }
+
+fun FragmentActivity.getAllDialogFragment(): List<DialogFragment> = supportFragmentManager
+    .fragments
+    .filterIsInstance<DialogFragment>()
 
 fun FragmentActivity.setDestinationChangeListener(
     navHostFragmentId: Int,
@@ -67,4 +73,7 @@ private fun getCurrentDisplayFragment(
 fun findNavControllerByNavHostFragmentId(
     fragmentManager: FragmentManager,
     navHostFragmentId: Int
-): NavController = (fragmentManager.findFragmentById(navHostFragmentId) as NavHostFragment).navController
+): NavController = (fragmentManager.findFragmentById(navHostFragmentId) as NavHostFragment)
+    .navController
+
+fun Activity.getRootView(): View = findViewById(android.R.id.content)
