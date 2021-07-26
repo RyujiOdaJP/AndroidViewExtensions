@@ -38,7 +38,7 @@ open class BackgroundSecureViewLifecycleCallback : Application.ActivityLifecycle
             .forEach { getDialogRootView(it)?.run(BackgroundSecureViewLifecycleCallback::onRerunVisible) }
     }
 
-    open inner class SecureInvisibleEventReceiver(val activity: Activity) : BroadcastReceiver() {
+    protected open inner class SecureInvisibleEventReceiver(val activity: Activity) : BroadcastReceiver() {
         private val backgroundEventFilter = IntentFilter()
             .apply { addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS) }
 
