@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentActivity
  * ApplicationのregisterLifecycleCallbacksでこのクラスを登録することで有効化される。
  */
 
-class BackgroundSecureViewLifecycleCallback : Application.ActivityLifecycleCallbacks {
+open class BackgroundSecureViewLifecycleCallback : Application.ActivityLifecycleCallbacks {
     override fun onActivityStarted(activity: Activity) {}
     override fun onActivityPaused(activity: Activity) {}
     override fun onActivityStopped(activity: Activity) {}
@@ -38,7 +38,7 @@ class BackgroundSecureViewLifecycleCallback : Application.ActivityLifecycleCallb
             .forEach { getDialogRootView(it)?.run(BackgroundSecureViewLifecycleCallback::onRerunVisible) }
     }
 
-    private inner class SecureInvisibleEventReceiver(val activity: Activity) : BroadcastReceiver() {
+    open inner class SecureInvisibleEventReceiver(val activity: Activity) : BroadcastReceiver() {
         private val backgroundEventFilter = IntentFilter()
             .apply { addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS) }
 
