@@ -3,14 +3,14 @@ package jp.co.arsaga.extensions.view.activity
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.widget.ProgressBar
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import jp.co.arsaga.extensions.view.toggle
 
 interface HasProgressBarActivity {
 
-    fun getProgressBar(): ProgressBar?
+    fun getProgressBar(): View?
 
     abstract class LoadingHandler :  Application.ActivityLifecycleCallbacks {
 
