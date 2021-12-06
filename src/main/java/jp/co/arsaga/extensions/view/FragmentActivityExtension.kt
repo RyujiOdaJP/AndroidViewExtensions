@@ -77,3 +77,12 @@ fun findNavControllerByNavHostFragmentId(
     .navController
 
 fun Activity.getRootView(): View = findViewById(android.R.id.content)
+
+fun FragmentActivity.getNavController(): NavController? = supportFragmentManager
+    .fragments.find { it is NavHostFragment }
+    ?.let { it as NavHostFragment }
+    ?.navController
+
+fun Activity.getNavController(): NavController? =
+    if (this is FragmentActivity) getNavController()
+    else null
