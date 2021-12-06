@@ -22,6 +22,7 @@ import androidx.databinding.BindingAdapter
 import androidx.navigation.*
 import androidx.navigation.fragment.FragmentNavigator
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 @BindingAdapter("binding_onOnceClick", "binding_clickIntervalMs", requireAll = false)
@@ -163,7 +164,12 @@ fun View.toggleBottomSheetState(bottomSheet: ViewGroup) {
 }
 
 @BindingAdapter("binding_webTo", "binding_onUrlError", "binding_headers", requireAll = false)
-fun webTo(view: View?, url: String?, onUrlError: View.OnClickListener?, headers: Map<String, Any>?) {
+fun webTo(
+    view: View?,
+    url: String?,
+    onUrlError: View.OnClickListener?,
+    headers: Map<String, Any>?
+) {
     view?.setOnClickListener {
         setTapReaction(it)
 
@@ -175,14 +181,19 @@ fun webTo(view: View?, url: String?, onUrlError: View.OnClickListener?, headers:
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         val bundle = Bundle().apply {
             headers?.forEach { header ->
-                when(val headerValue = header.value) {
+                when (val headerValue = header.value) {
                     is Int -> this.putInt(header.key, headerValue)
                     else -> this.putString(header.key, headerValue.toString())
                 }
             }
         }
         intent.putExtra(Browser.EXTRA_HEADERS, bundle)
-        ContextCompat.startActivity(view.context, intent, bundle)
+        runCatching { ContextCompat.startActivity(view.context, intent, bundle) }
+            .onSuccess { Timber.d("jump to%s", url) }
+            .onFailure { message ->
+                Timber.e(message)
+                onUrlError?.onClick(view)
+            }
     }
 }
 
